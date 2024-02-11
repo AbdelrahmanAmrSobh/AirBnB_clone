@@ -19,6 +19,10 @@ class HBNBCommand(cmd.Cmd):
         """exit of the program"""
         return True
 
+    def emptyline(self):
+        """an empty line + ENTER shouldn’t execute anything"""
+        pass
+
     def check_class_name(line, prints=True):
         """
         checks a given name if exist and if valid
