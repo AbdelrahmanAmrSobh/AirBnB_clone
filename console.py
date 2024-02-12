@@ -3,6 +3,12 @@
 
 import cmd
 from models.base_model import BaseModel
+from models.user import User
+from models.place import Place
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.review import Review
 from models import storage
 
 
@@ -27,7 +33,8 @@ class HBNBCommand(cmd.Cmd):
         """
         checks a given name if exist and if valid
         """
-        class_names = ["BaseModel"]
+        class_names = ["BaseModel", "User", "Place", "State",
+                       "City", "Amenity", "Review"]
         arguments = line.split()
         if len(arguments) == 0:
             if prints:
@@ -59,9 +66,23 @@ class HBNBCommand(cmd.Cmd):
         saves it (to the JSON file) and prints the id.
         Ex: $ create BaseModel
         """
-        if HBNBCommand.check_class_name(line) is False:
+        class_name = HBNBCommand.check_class_name(line)
+        if class_name is False:
             return
-        new_i = BaseModel()
+        if class_name == "BaseModel":
+            new_i = BaseModel()
+        elif class_name == "User":
+            new_i = User()
+        elif class_name == "Place":
+            new_i = Place()
+        elif class_name == "State":
+            new_i = State()
+        elif class_name == "City":
+            new_i = City()
+        elif class_name == "Amenity":
+            new_i = Amenity()
+        elif class_name == "Review":
+            new_i = Review()
         new_i.save()
         print(new_i.id)
 
