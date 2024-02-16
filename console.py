@@ -177,17 +177,14 @@ class HBNBCommand(cmd.Cmd):
             "all": self.do_all,
             "count": self.count,
             "show": self.do_show,
-            "update": self.do_update,
+            "update": self.set_update,
             "destroy": self.do_destroy
         }
         if HBNBCommand.check_class_name(class_name) is False:
             return
         if function_name not in functions.keys():
             return cmd.Cmd().default(self, line)
-        if function_name == "update":
-            pass
-        else:
-            functions[function_name](f"{class_name} {arguments}")
+        functions[function_name](f"{class_name} {arguments}")
 
     def count(self, line):
         """
@@ -199,6 +196,31 @@ class HBNBCommand(cmd.Cmd):
             if key.split('.')[0] == line.split()[0]:
                 instances += 1
         print(instances)
+
+    def set_update(self, line):
+        """
+        helper function for do_update
+        """
+        class_name = HBNBCommand.check_class_name(line)
+        if class_name is False:
+            return
+        arguments = line.split(',', 1)
+        given_id = HBNBCommand.check_class_id(arguments[0]).split('.')
+        line = arguments[1][1:]
+        if line.startswith('{'):
+            line = line[1:-1]
+            line = line.split(', ')
+            for argument in line:
+                word = argument.split(': ')
+                self.do_update(f"{given_id[0]} {given_id[1]}\
+                        {HBNBCommand.remove_quotes(word[0])}\
+                        {HBNBCommand.remove_quotes(word[1])}")
+        else:
+            line = line.split(', ')
+            self.do_update(f"{given_id[0]} {given_id[1]}\
+                    {HBNBCommand.remove_quotes(line[0])}\
+                    {HBNBCommand.remove_quotes(line[1])}")
+            pass
 
 
 if __name__ == "__main__":
