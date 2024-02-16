@@ -205,7 +205,10 @@ class HBNBCommand(cmd.Cmd):
         if class_name is False:
             return
         arguments = line.split(',', 1)
-        given_id = HBNBCommand.check_class_id(arguments[0]).split('.')
+        given_id = HBNBCommand.check_class_id(arguments[0])
+        if given_id is False:
+            return
+        given_id = given_id.split('.')
         line = arguments[1][1:]
         if line.startswith('{'):
             line = line[1:-1]
@@ -220,7 +223,6 @@ class HBNBCommand(cmd.Cmd):
             self.do_update(f"{given_id[0]} {given_id[1]}\
                     {HBNBCommand.remove_quotes(line[0])}\
                     {HBNBCommand.remove_quotes(line[1])}")
-            pass
 
 
 if __name__ == "__main__":
