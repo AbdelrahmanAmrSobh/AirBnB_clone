@@ -152,6 +152,47 @@ class HBNBCommand(cmd.Cmd):
         setattr(storage.all()[given_id], arguments[2], arguments[3])
         storage.save()
 
+    def default(self, line):
+        """
+        allow the usage of class_name.function(parameters)
+        Ex: $ BaseModel.all()
+        Eq: $ all BaseModel
+        """
+        arguments = line.split('.')
+        try:
+            class_name = arguments[0]
+            arguments = arguments[1].split('(')
+            function_name = arguments[0]
+            arguments = arguments[1].split(')')[0].split(', ')
+        except IndexError:
+            return cmd.Cmd().default(line)
+        functions = {
+                "all": self.do_all,
+                "count": self.count,
+                "show": self.do_show,
+                "destroy": self.do_destroy,
+                "update": self.do_update
+                }
+        if HBNBCommand.check_class_name(class_name) is False:
+            return
+        if function_name == "all":
+            self.do_all(class_name)
+        elif function_name == "count":
+            self.count(class_name)
+        elif function_name == "show":
+            self.do_show(class_name + " " + arguments[0])
+
+    def count(self, line):
+        """
+        retrieve the number of instances of a class
+        """
+        instances = 0
+        storage.all()
+        for key, value in storage.all().items():
+            if key.split('.')[0] == line:
+                instances += 1
+        print(instances)
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
