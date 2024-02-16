@@ -181,6 +181,10 @@ class HBNBCommand(cmd.Cmd):
             self.count(class_name)
         elif function_name == "show":
             self.do_show(class_name + " " + arguments[0])
+        elif function_name == "destroy":
+            self.do_destroy(class_name + " " + arguments[0])
+        elif function_name == "update":
+            pass
 
     def count(self, line):
         """
