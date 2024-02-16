@@ -46,6 +46,12 @@ class HBNBCommand(cmd.Cmd):
             return False
         return arguments[0]
 
+    def remove_quotes(line):
+        if ((line.startswith('"') and line.endswith('"')) or
+           (line.startswith("'") and line.endswith("'"))):
+            return line[1:-1]
+        return line
+
     def check_class_id(line):
         """
         checks if id is given and if so if its valid for given class
@@ -54,6 +60,7 @@ class HBNBCommand(cmd.Cmd):
         if len(arguments) < 2:
             print("** instance id missing **")
             return False
+        arguments[1] = HBNBCommand.remove_quotes(arguments[1])
         given_id = arguments[0] + '.' + arguments[1]
         if given_id not in storage.all():
             print("** no instance found **")
@@ -163,32 +170,24 @@ class HBNBCommand(cmd.Cmd):
             class_name = arguments[0]
             arguments = arguments[1].split('(')
             function_name = arguments[0]
-            arguments = arguments[1].split(')')[0].split(', ')
+            arguments = arguments[1][0:-1]
         except IndexError:
             return cmd.Cmd().default(line)
         functions = {
-                "all": self.do_all,
-                "count": self.count,
-                "show": self.do_show,
-                "destroy": self.do_destroy,
-                "update": self.do_update
-                }
+            "all": self.do_all,
+            "count": self.count,
+            "show": self.do_show,
+            "update": self.do_update,
+            "destroy": self.do_destroy
+        }
         if HBNBCommand.check_class_name(class_name) is False:
             return
-        if function_name == "all":
-            self.do_all(class_name)
-        elif function_name == "count":
-            self.count(class_name)
-        elif function_name == "show":
-            self.do_show(class_name + " " + arguments[0])
-        elif function_name == "destroy":
-            self.do_destroy(class_name + " " + arguments[0])
-        elif function_name == "update":
-            if len(arguments) == 3:
-                self.do_update(class_name + " " + arguments[0] + " "
-                               + arguments[1] + " " + arguments[2])
-            else:
-                pass
+        if function_name not in functions.keys():
+            return cmd.Cmd().default(self, line)
+        if function_name == "update":
+            pass
+        else:
+            functions[function_name](f"{class_name} {arguments}")
 
     def count(self, line):
         """
@@ -197,7 +196,7 @@ class HBNBCommand(cmd.Cmd):
         instances = 0
         storage.all()
         for key, value in storage.all().items():
-            if key.split('.')[0] == line:
+            if key.split('.')[0] == line.split()[0]:
                 instances += 1
         print(instances)
 
