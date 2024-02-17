@@ -11,7 +11,7 @@ class TestAmenity(unittest.TestCase):
     def test_name(self):
         """test name"""
         a = Amenity()
-        self.assertEqual(str, type(a.first_name))
+        self.assertEqual(str, type(a.name))
 
 
 if __name__ == "__main__":

@@ -2,6 +2,7 @@
 """test file storage"""
 
 import unittest
+import os
 from models import storage
 from models.base_model import BaseModel
 from models.engine import file_storage
@@ -40,20 +41,20 @@ class TestFileStorage(unittest.TestCase):
 
     def test_all(self):
         """test method all"""
-        self.assertEqual(dict, type(models.storage.all()))
+        self.assertEqual(dict, type(storage.all()))
 
     def test_new(self):
         """test method new"""
         b = BaseModel()
-        models.storage.new(b)
-        self.assertIn("BaseModel." + b.id, models.storage.all().keys())
-        self.assertIn(b, models.storage.all().values())
+        storage.new(b)
+        self.assertIn("BaseModel." + b.id, storage.all().keys())
+        self.assertIn(b, storage.all().values())
 
     def test_save(self):
         """test method save"""
         b = BaseModel()
-        models.storage.new(b)
-        models.storage.save()
+        storage.new(b)
+        storage.save()
         save_text = ""
         with open("file.json", "r") as f:
             save_text = f.read()
@@ -62,15 +63,15 @@ class TestFileStorage(unittest.TestCase):
     def test_reload(self):
         """test method reload"""
         b = BaseModel()
-        models.storage.new(b)
-        models.storage.save()
-        models.storage.reload()
+        storage.new(b)
+        storage.save()
+        storage.reload()
         objs = FileStorage._FileStorage__objects
         self.assertIn("BaseModel." + b.id, objs)
 
     def test_reload_with_arg(self):
         with self.assertRaises(TypeError):
-            models.storage.reload(None)
+            storage.reload(None)
 
 
 if __name__ == "__main__":
