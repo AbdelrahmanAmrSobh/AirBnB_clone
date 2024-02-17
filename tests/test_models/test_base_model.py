@@ -54,3 +54,7 @@ class TestBaseModel(unittest.TestCase):
         """test created_at"""
         self.assertEqual(self.base_model.created_at,
                          self.base_model.updated_at)
+
+
+if __name__ == "__main__":
+    unittest.main()
