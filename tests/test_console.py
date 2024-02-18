@@ -124,13 +124,38 @@ class TestConsole(unittest.TestCase):
                 HBNBCommand().onecmd(class_name + "count()")
                 count = f.getvalue().split('\n')[1]
                 self.assertEqual(count, "1")
-                HBNBCommand().onecmd(class_name + f"show({object_id})")
+                HBNBCommand().onecmd(class_name + f"show()")
                 response1 = f.getvalue().split('\n')[2]
+                self.assertEqual(response1, TestConsole.id_is_missing)
+                HBNBCommand().onecmd(class_name + f"show({object_id[:-1]})")
+                response1 = f.getvalue().split('\n')[3]
+                self.assertEqual(response1, TestConsole.id_not_found)
+                HBNBCommand().onecmd(class_name + f"show({object_id})")
+                response1 = f.getvalue().split('\n')[4]
                 self.assertNotEqual(response1, TestConsole.id_not_found)
                 self.assertTrue(len(response1) != 0)
                 HBNBCommand().onecmd(class_name + f"all()")
-                response2 = f.getvalue().split('\n')[3]
+                response2 = f.getvalue().split('\n')[5]
                 self.assertEqual(response2[2:-2], response1)
+                HBNBCommand().onecmd(class_name + f"update()")
+                response1 = f.getvalue().split('\n')[6]
+                self.assertEqual(response1, TestConsole.id_is_missing)
+                HBNBCommand().onecmd(class_name + f"update({object_id[:-1]})")
+                response1 = f.getvalue().split('\n')[7]
+                self.assertEqual(response1, TestConsole.id_not_found)
+                HBNBCommand().onecmd(class_name + f"update({object_id})")
+                response1 = f.getvalue().split('\n')[8]
+                self.assertEqual(response1, TestConsole.attribute_is_missing)
+                length = len(f.getvalue().split('\n'))
+                HBNBCommand().onecmd(class_name + f"update({object_id},\
+ {{last_name: tom, wife: mariam}})")
+                self.assertEqual(length, len(f.getvalue().split('\n')))
+                self.assertEqual(storage.all()[key].last_name, 'tom')
+                self.assertEqual(storage.all()[key].wife, "mariam")
+                HBNBCommand().onecmd(class_name + f"update({object_id},\
+ first_name)")
+                response1 = f.getvalue().split('\n')[9]
+                self.assertEqual(response1, TestConsole.value_is_missing)
                 length = len(f.getvalue().split('\n'))
                 HBNBCommand().onecmd(class_name + f"update('{object_id}',\
  {{'first_name': 'John', \"age\": 89}})")
@@ -142,8 +167,19 @@ class TestConsole(unittest.TestCase):
                 self.assertEqual(length, len(f.getvalue().split('\n')))
                 self.assertNotEqual(storage.all()[key].first_name, 'John')
                 self.assertEqual(storage.all()[key].first_name, 'not_john')
+                HBNBCommand().onecmd(class_name + f"destroy()")
+                response1 = f.getvalue().split('\n')[10]
+                self.assertEqual(response1, TestConsole.id_is_missing)
+                HBNBCommand().onecmd(class_name + f"destroy({object_id[:-1]})")
+                response1 = f.getvalue().split('\n')[11]
+                self.assertEqual(response1, TestConsole.id_not_found)
+                length = len(f.getvalue().split('\n'))
                 HBNBCommand().onecmd(class_name + f"destroy({object_id})")
                 self.assertEqual(length, len(f.getvalue().split('\n')))
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("MyClass.all()")
+            response = f.getvalue()
+            self.assertEqual(response[:-1], TestConsole.class_not_found)
 
 
 if __name__ == "__main__":

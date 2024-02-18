@@ -183,7 +183,7 @@ class HBNBCommand(cmd.Cmd):
         if HBNBCommand.check_class_name(class_name) is False:
             return
         if function_name not in functions.keys():
-            return cmd.Cmd().default(self, line)
+            return cmd.Cmd().default(line)
         functions[function_name](f"{class_name} {arguments}")
 
     def count(self, line):
@@ -209,6 +209,8 @@ class HBNBCommand(cmd.Cmd):
         if given_id is False:
             return
         given_id = given_id.split('.')
+        if len(arguments) == 1:
+            return self.do_update(f"{given_id[0]} {given_id[1]}")
         line = arguments[1][1:]
         if line.startswith('{'):
             line = line[1:-1]
@@ -220,6 +222,9 @@ class HBNBCommand(cmd.Cmd):
                         {HBNBCommand.remove_quotes(word[1])}")
         else:
             line = line.split(', ')
+            if len(line) == 1:
+                return self.do_update(f"{given_id[0]} {given_id[1]}\
+                         {HBNBCommand.remove_quotes(line[0])}")
             self.do_update(f"{given_id[0]} {given_id[1]}\
                     {HBNBCommand.remove_quotes(line[0])}\
                     {HBNBCommand.remove_quotes(line[1])}")
