@@ -138,9 +138,10 @@ class TestConsole(unittest.TestCase):
                 self.assertEqual(storage.all()[key].first_name, 'John')
                 self.assertEqual(storage.all()[key].age, "89")
                 HBNBCommand().onecmd(class_name + f"update('{object_id}',\
- 'first_name', \"not john\")")
+ 'first_name', \"not_john\")")
                 self.assertEqual(length, len(f.getvalue().split('\n')))
                 self.assertNotEqual(storage.all()[key].first_name, 'John')
+                self.assertEqual(storage.all()[key].first_name, 'not_john')
                 HBNBCommand().onecmd(class_name + f"destroy({object_id})")
                 self.assertEqual(length, len(f.getvalue().split('\n')))
 
