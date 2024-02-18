@@ -13,23 +13,23 @@ class TestFileStorage(unittest.TestCase):
     """class testing"""
 
     def setUp(self):
-        """use before each method"""
+        """save old storage"""
         try:
-            os.rename("file.json", "tmp_storage.json")
-        except IOError:
-            pass
-
-    def tearDown(self):
-        """use after each method"""
-        try:
-            os.remove("file.json")
-        except IOError:
-            pass
-        try:
-            os.rename("tmp_storage.json", "file.json")
+            os.rename(os.getcwd() + "/file.json", "tmp_storage")
         except IOError:
             pass
         FileStorage._FileStorage__objects = {}
+
+    def tearDown(self):
+        """remove tmp storage"""
+        try:
+            os.remove(os.getcwd() + "/file.json")
+        except IOError:
+            pass
+        try:
+            os.rename(os.getcwd() + "/tmp_storage", "file.json")
+        except IOError:
+            pass
 
     def test_file_path(self):
         """test file_path"""

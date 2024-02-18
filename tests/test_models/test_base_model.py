@@ -1,19 +1,37 @@
 #!/usr/bin/python3
 """test for base model"""
 
+import os
 import unittest
 from models.base_model import BaseModel
 from datetime import datetime
 import uuid
 import models
+from models.engine.file_storage import FileStorage
 
 
 class TestBaseModel(unittest.TestCase):
     """The class that contains test cases for BaseModel"""
 
     def setUp(self):
-        """create instance to use"""
+        """save old storage"""
+        try:
+            os.rename(os.getcwd() + "/file.json", "tmp_storage")
+        except IOError:
+            pass
+        FileStorage._FileStorage__objects = {}
         self.base_model = BaseModel()
+
+    def tearDown(self):
+        """remove tmp storage"""
+        try:
+            os.remove(os.getcwd() + "/file.json")
+        except IOError:
+            pass
+        try:
+            os.rename(os.getcwd() + "/tmp_storage", "file.json")
+        except IOError:
+            pass
 
     def test_init(self):
         """test init method"""
