@@ -1,0 +1,24 @@
+.container .places h1 {
+    font-size: 30px;
+}
+
+.container .places ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.container .places ul li {
+    width: 390px;
+    padding: 0 20px;
+    margin: 15px;
+    border: 1px solid #ff5a5f;
+    border-radius: var(--border-radius);
+    text-align: center;
+}
+
+.container .places ul li article h2 {
+    font-size: 30px;
+    margin: 15px 0;
+}
